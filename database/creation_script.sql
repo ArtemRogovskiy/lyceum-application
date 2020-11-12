@@ -47,6 +47,10 @@ CREATE TABLE IF NOT EXISTS `mgol`.`class` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+ALTER TABLE mgol.class CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE mgol.class drop PRIMARY KEY, ADD PRIMARY KEY (id);
+ALTER TABLE mgol.class MODIFY form_master INT NULL;
+
 
 -- -----------------------------------------------------
 -- Table `mgol`.`user_status`
@@ -88,6 +92,8 @@ CREATE TABLE IF NOT EXISTS `mgol`.`user` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+ALTER TABLE mgol.user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 
 -- -----------------------------------------------------
 -- Table `mgol`.`user_role`
@@ -120,6 +126,7 @@ CREATE TABLE IF NOT EXISTS `mgol`.`subject` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+ALTER TABLE `mgol`.`subject` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `mgol`.`period`
