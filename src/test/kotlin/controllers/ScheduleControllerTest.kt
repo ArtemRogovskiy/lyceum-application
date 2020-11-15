@@ -8,8 +8,6 @@ import kotlin.test.*
 
 class ScheduleControllerTest {
 
-//    private val registrationController: RegistrationController = mockk()
-
     @Test
     fun testClassScheduleKeyUnexistent(): Unit = withTestApplication(Application::scheduleModule) {
         handleRequest(HttpMethod.Get, "/schedule/class?classNumber=10").apply {
