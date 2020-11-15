@@ -24,7 +24,7 @@ class ScheduleControllerTest {
     @Test
     fun testTeacherScheduleKeyUnexistent(): Unit = withTestApplication(Application::scheduleModule) {
         handleRequest(HttpMethod.Get, "/schedule/teacher").apply {
-            assertEquals(405, response.status()?.value)
+            assertEquals(404, response.status()?.value)
         }
         handleRequest(HttpMethod.Get, "/schedule/teacher?classNumber=10").apply {
             assertEquals(404, response.status()?.value)
