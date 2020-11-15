@@ -5,6 +5,7 @@ import dao.models.ClassSchedule
 import dao.models.TeacherSchedule
 import getLogger
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.get
@@ -23,6 +24,7 @@ class ScheduleControllerImpl(
             val classLetterParam = queryParameters["classLetter"]?.toUpperCase()
             if (classNumberParam == null || classLetterParam == null) {
                 getLogger().warn("Wrong parameters")
+                call.respond(HttpStatusCode.NotFound)
             } else {
                 call.respond(getClassSchedule(classNumberParam, classLetterParam))
             }
@@ -34,6 +36,7 @@ class ScheduleControllerImpl(
             val teacherIdParam = queryParameters["teacherId"]?.toInt()
             if (teacherIdParam == null) {
                 getLogger().warn("Wrong parameters")
+                call.respond(HttpStatusCode.NotFound)
             } else {
                 call.respond(getTeacherSchedule(teacherIdParam))
             }
