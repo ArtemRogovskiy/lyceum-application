@@ -8,8 +8,9 @@ class ClassSchedule(resultSet: ResultSet) {
     val endTime: String = resultSet.getString("end_time")
     val subject: String = resultSet.getString("name")
     val room: Int = resultSet.getInt("room")
-    val teacherName: String = resultSet.getString("first_name")
     val teacherSurname: String = resultSet.getString("last_name")
+    val teacherName: String = resultSet.getString("first_name")
+    val middleName: String = resultSet.getString("middle_name")
 
     companion object {
         val classSchedulesFromResultSet: (ResultSet) -> List<ClassSchedule> = {
