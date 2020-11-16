@@ -1,13 +1,13 @@
-package main.kotlin.util
+package util
 
 import java.sql.Connection
 import java.sql.DriverManager
 import java.util.*
 
 
-private var username = "mgol"
-private var password = "mgol1996"
-val url = "jdbc:mysql://127.0.0.1:3306/"
+private var username = "root"
+private var password = "password"
+const val url = "jdbc:mysql://127.0.0.1:3307/"
 
 fun getConnection(): Connection? {
     val connectionProps = Properties()
@@ -25,5 +25,5 @@ fun getConnection(): Connection? {
     } catch (ex: Exception) {
         ex.printStackTrace()
     }
-    return connection;
+    return connection
 }

@@ -10,7 +10,7 @@ class ScheduleServiceImpl(private val scheduleDao: ScheduleDao) : ScheduleServic
         return scheduleDao.getClassSchedule(classNumber, classLetter)
     }
 
-    override fun getTeacherSchedule(teacherId: Int): List<TeacherSchedule> {
+    override fun getTeacherSchedule(teacherId: String): List<TeacherSchedule> {
         return scheduleDao.getTeacherSchedule(teacherId)
     }
 

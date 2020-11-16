@@ -7,5 +7,5 @@ interface ScheduleService {
 
     fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassSchedule>
 
-    fun getTeacherSchedule(teacherId: Int): List<TeacherSchedule>
+    fun getTeacherSchedule(teacherId: String): List<TeacherSchedule>
 }

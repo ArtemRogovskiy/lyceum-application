@@ -1,3 +1,3 @@
-insert into mgol.class (id, number, letter) values
-(1, 10, 'А'),
-(2, 10, 'Б');
+insert into mgol.class (id, number, letter)
+values (UUID(), 10, 'А'),
+       (UUID(), 10, 'Б');
