@@ -4,7 +4,7 @@ import dao.ScheduleDao
 import dao.models.ClassSchedule
 import dao.models.TeacherSchedule
 import getLogger
-import main.kotlin.util.executeQuery
+import util.executeQuery
 
 class ScheduleDaoImpl : ScheduleDao {
 

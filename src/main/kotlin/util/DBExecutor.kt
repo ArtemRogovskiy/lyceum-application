@@ -1,4 +1,4 @@
-package main.kotlin.util
+package util
 
 import getLogger
 import java.sql.ResultSet
