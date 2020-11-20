@@ -10,23 +10,23 @@ class ScheduleControllerTest {
 
     @Test
     fun testClassScheduleKeyUnexistent(): Unit = withTestApplication(Application::scheduleModule) {
-        handleRequest(HttpMethod.Get, "/schedule/class?classNumber=10").apply {
+        handleRequest(HttpMethod.Get, "/schedules/class?classNumber=10").apply {
             assertEquals(404, response.status()?.value)
         }
-        handleRequest(HttpMethod.Get, "/schedule/class?classLetter=a").apply {
+        handleRequest(HttpMethod.Get, "/schedules/class?classLetter=a").apply {
             assertEquals(404, response.status()?.value)
         }
-        handleRequest(HttpMethod.Get, "/schedule/class").apply {
+        handleRequest(HttpMethod.Get, "/schedules/class").apply {
             assertEquals(404, response.status()?.value)
         }
     }
 
     @Test
     fun testTeacherScheduleKeyUnexistent(): Unit = withTestApplication(Application::scheduleModule) {
-        handleRequest(HttpMethod.Get, "/schedule/teacher").apply {
+        handleRequest(HttpMethod.Get, "/schedules/teacher").apply {
             assertEquals(404, response.status()?.value)
         }
-        handleRequest(HttpMethod.Get, "/schedule/teacher?classNumber=10").apply {
+        handleRequest(HttpMethod.Get, "/schedules/teacher?classNumber=10").apply {
             assertEquals(404, response.status()?.value)
         }
     }
