@@ -1,12 +1,22 @@
 package dao
 
-import dao.models.ClassSchedule
-import dao.models.TeacherSchedule
+import controllers.models.ClassSchedule
+import dao.models.ClassScheduleDaoModel
+import dao.models.ScheduleDaoModel
+import dao.models.TeacherScheduleDaoModel
 import java.util.*
 
 interface ScheduleDao {
 
-    fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassSchedule>
+    fun getSchedule(scheduleId: UUID): ScheduleDaoModel
 
-    fun getTeacherSchedule(teacherId: String): List<TeacherSchedule>
+    fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel>
+
+    fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel>
+
+    fun addSchedule(classSchedule: ClassSchedule): UUID
+
+    fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule)
+
+    fun deleteSchedule(scheduleId: UUID)
 }
