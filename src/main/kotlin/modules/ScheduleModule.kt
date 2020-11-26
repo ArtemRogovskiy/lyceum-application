@@ -31,8 +31,8 @@ fun Application.scheduleModule() {
     routing {
         route("/schedules") {
             // http://localhost:8080/schedules/7b89ea87-27e8-11eb-aa2f-0242ac140002
-            get("/{id}") {
-                val scheduleId = call.parameters["id"]
+            get("/{scheduleId}") {
+                val scheduleId = call.parameters["scheduleId"]
                 scheduleId ?: getLogger().warn("Empty path parameter.")
                 call.respond(scheduleService.getSchedule(UUID.fromString(scheduleId)))
             }
@@ -70,16 +70,16 @@ fun Application.scheduleModule() {
                 call.respond(HttpStatusCode.Created, id)
             }
 
-            put("/{id}") {
-                val scheduleId = call.parameters["id"]
+            put("/{scheduleId}") {
+                val scheduleId = call.parameters["scheduleId"]
                 val updatedSchedule = call.receive<ClassSchedule>()
                 scheduleId ?: getLogger().warn("Empty path parameter.")
                 scheduleService.updateSchedule(UUID.fromString(scheduleId), updatedSchedule)
                 call.respond(HttpStatusCode.OK)
             }
 
-            delete("/{id}") {
-                val scheduleId = call.parameters["id"]
+            delete("/{scheduleId}") {
+                val scheduleId = call.parameters["scheduleId"]
                 scheduleId ?: getLogger().warn("Empty path parameter.")
                 scheduleService.deleteSchedule(UUID.fromString(scheduleId))
                 call.respond(HttpStatusCode.Accepted)
