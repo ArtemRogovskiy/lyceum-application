@@ -19,4 +19,12 @@ fun <T> executeQuery(query: String, rowMapper: (ResultSet) -> List<T>): List<T> 
     return list
 }
 
+fun executeUpdate(query: String) = run {
+    getConnection().use { connection ->
+        connection?.createStatement().use { statement ->
+            statement?.executeUpdate(query)
+        }
+    }
+}
+
 
