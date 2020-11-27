@@ -11,7 +11,7 @@ import util.executeUpdate
 import java.util.*
 
 class ScheduleDaoImpl : ScheduleDao {
-    override fun getSchedule(scheduleId: UUID): ScheduleDaoModel {
+    override suspend fun getSchedule(scheduleId: UUID): ScheduleDaoModel {
         val query =
             "select id, teacher_id, room, class_id, subject_id, period_id " +
                     "from mgol.class_schedule " +
@@ -19,7 +19,7 @@ class ScheduleDaoImpl : ScheduleDao {
         return executeQuery(query, ScheduleDaoModel.scheduleFromResultSet)[0]
     }
 
-    override fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel> {
+    override suspend fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel> {
         val query =
             "select p.day_of_week, p.start_time, p.end_time, s.name, cs.room, u.last_name, u.first_name, u.middle_name " +
                     "from mgol.class_schedule cs " +
@@ -40,7 +40,7 @@ class ScheduleDaoImpl : ScheduleDao {
         return schedule
     }
 
-    override fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel> {
+    override suspend fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel> {
         val query = "select p.day_of_week, p.start_time, p.end_time, s.name, cs.room, c.number, c.letter " +
                 "from mgol.class_schedule cs " +
                 "join mgol.user u " +
@@ -59,7 +59,7 @@ class ScheduleDaoImpl : ScheduleDao {
         return schedule
     }
 
-    override fun addSchedule(classSchedule: ClassSchedule): UUID {
+    override suspend fun addSchedule(classSchedule: ClassSchedule): UUID {
         val id = UUID.randomUUID()
         val query = "insert into mgol.class_schedule " +
                 "(id, teacher_id, room, class_id, subject_id, period_id) values('$id', " +
@@ -69,7 +69,7 @@ class ScheduleDaoImpl : ScheduleDao {
         return id
     }
 
-    override fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule) {
+    override suspend fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule) {
         val query = "update mgol.class_schedule " +
                 "set teacher_id = '${classSchedule.teacherId}', room = ${classSchedule.room}, " +
                 "class_id = '${classSchedule.classId}', subject_id = '${classSchedule.subjectId}', " +
@@ -78,7 +78,7 @@ class ScheduleDaoImpl : ScheduleDao {
         getLogger().info("$rowsNum rows have been updated")
     }
 
-    override fun deleteSchedule(scheduleId: UUID) {
+    override suspend fun deleteSchedule(scheduleId: UUID) {
         val query = "delete from mgol.class_schedule where id = '$scheduleId';"
         val rowsNum = executeUpdate(query)
         getLogger().info("$rowsNum rows have been deleted")
