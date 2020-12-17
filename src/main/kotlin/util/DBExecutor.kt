@@ -1,6 +1,5 @@
 package util
 
-import getLogger
 import java.sql.ResultSet
 
 fun <T> executeQuery(query: String, rowMapper: (ResultSet) -> List<T>): List<T> {
@@ -9,7 +8,7 @@ fun <T> executeQuery(query: String, rowMapper: (ResultSet) -> List<T>): List<T> 
         connection?.createStatement().use { statement ->
             statement?.executeQuery(query).use { resultSet ->
                 if (resultSet == null) {
-                    getLogger().warn("Result set is null after execution of $query")
+                    Log.warn("Result set is null after execution of $query")
                 } else {
                     list = rowMapper(resultSet)
                 }

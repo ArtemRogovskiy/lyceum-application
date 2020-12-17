@@ -5,83 +5,91 @@ import dao.ScheduleDao
 import dao.models.ClassScheduleDaoModel
 import dao.models.ScheduleDaoModel
 import dao.models.TeacherScheduleDaoModel
-import getLogger
+import util.Log
 import util.executeQuery
 import util.executeUpdate
 import java.util.*
 
 class ScheduleDaoImpl : ScheduleDao {
     override fun getSchedule(scheduleId: UUID): ScheduleDaoModel {
-        val query =
-            "select id, teacher_id, room, class_id, subject_id, period_id " +
-                    "from mgol.class_schedule " +
-                    "where id = '$scheduleId';"
+        val query = """
+            select id, teacher_id, room, class_id, subject_id, period_id
+                    from mgol.class_schedule
+                    where id = '$scheduleId';
+        """
         return executeQuery(query, ScheduleDaoModel.scheduleFromResultSet)[0]
     }
 
     override fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel> {
-        val query =
-            "select p.day_of_week, p.start_time, p.end_time, s.name, cs.room, u.last_name, u.first_name, u.middle_name " +
-                    "from mgol.class_schedule cs " +
-                    "join mgol.user u " +
-                    "on cs.teacher_id = u.id " +
-                    "join mgol.subject s " +
-                    "on cs.subject_id = s.id " +
-                    "join mgol.period p " +
-                    "on cs.period_id = p.id " +
-                    "join mgol.class c " +
-                    "on cs.class_id = c.id " +
-                    "where c.letter = '$classLetter' " +
-                    "and c.number = $classNumber " +
-                    "order by day_of_week, start_time;"
-        val schedule =
-            executeQuery(query, ClassScheduleDaoModel.classSchedulesFromResultSet)
-        getLogger().debug("List of ClassSchedule from db: $schedule")
+        val query = """
+            select p.day_of_week, p.start_time, p.end_time, s.name, cs.room, u.last_name, u.first_name, u.middle_name 
+                    from mgol.class_schedule cs
+                    join mgol.user u
+                    on cs.teacher_id = u.id
+                    join mgol.subject s
+                    on cs.subject_id = s.id
+                    join mgol.period p 
+                    on cs.period_id = p.id 
+                    join mgol.class c 
+                    on cs.class_id = c.id 
+                    where c.letter = '$classLetter' 
+                    and c.number = $classNumber 
+                    order by day_of_week, start_time;
+        """
+        val schedule = executeQuery(query, ClassScheduleDaoModel.classSchedulesFromResultSet)
+        Log.debug("List of ClassSchedule from db: $schedule")
         return schedule
     }
 
     override fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel> {
-        val query = "select p.day_of_week, p.start_time, p.end_time, s.name, cs.room, c.number, c.letter " +
-                "from mgol.class_schedule cs " +
-                "join mgol.user u " +
-                "on cs.teacher_id = u.id " +
-                "join mgol.subject s " +
-                "on cs.subject_id = s.id " +
-                "join mgol.period p " +
-                "on cs.period_id = p.id " +
-                "join mgol.class c " +
-                "on cs.class_id = c.id " +
-                "where cs.teacher_id = '$teacherId' " +
-                "order by day_of_week, start_time;"
-        val schedule =
-            executeQuery(query, TeacherScheduleDaoModel.teacherSchedulesFromResultSet)
-        getLogger().debug("List of TeacherSchedule from db: $schedule")
+        val query = """
+            select p.day_of_week, p.start_time, p.end_time, s.name, cs.room, c.number, c.letter 
+                    from mgol.class_schedule cs 
+                    join mgol.user u 
+                    on cs.teacher_id = u.id 
+                    join mgol.subject s 
+                    on cs.subject_id = s.id 
+                    join mgol.period p 
+                    on cs.period_id = p.id 
+                    join mgol.class c 
+                    on cs.class_id = c.id 
+                    where cs.teacher_id = '$teacherId' 
+                    order by day_of_week, start_time;
+        """
+        val schedule = executeQuery(query, TeacherScheduleDaoModel.teacherSchedulesFromResultSet)
+        Log.debug("List of TeacherSchedule from db: $schedule")
         return schedule
     }
 
     override fun addSchedule(classSchedule: ClassSchedule): UUID {
         val id = UUID.randomUUID()
-        val query = "insert into mgol.class_schedule " +
-                "(id, teacher_id, room, class_id, subject_id, period_id) values('$id', " +
-                "'${classSchedule.teacherId}', ${classSchedule.room}, '${classSchedule.classId}', " +
-                "'${classSchedule.subjectId}', ${classSchedule.period});"
+        val query = """
+            insert into mgol.class_schedule 
+                (id, teacher_id, room, class_id, subject_id, period_id) values('$id', 
+                '${classSchedule.teacherId}', ${classSchedule.room}, '${classSchedule.classId}', 
+                '${classSchedule.subjectId}', ${classSchedule.period});
+        """
         executeUpdate(query)
         return id
     }
 
     override fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule) {
-        val query = "update mgol.class_schedule " +
-                "set teacher_id = '${classSchedule.teacherId}', room = ${classSchedule.room}, " +
-                "class_id = '${classSchedule.classId}', subject_id = '${classSchedule.subjectId}', " +
-                "period_id = ${classSchedule.period} where id = '$scheduleId';"
+        val query = """
+            update mgol.class_schedule 
+                set teacher_id = '${classSchedule.teacherId}', room = ${classSchedule.room}, 
+                class_id = '${classSchedule.classId}', subject_id = '${classSchedule.subjectId}', 
+                period_id = ${classSchedule.period} where id = '$scheduleId';
+        """
         val rowsNum = executeUpdate(query)
-        getLogger().info("$rowsNum rows have been updated")
+        Log.info("$rowsNum rows have been updated")
     }
 
     override fun deleteSchedule(scheduleId: UUID) {
-        val query = "delete from mgol.class_schedule where id = '$scheduleId';"
+        val query = """
+            delete from mgol.class_schedule where id = '$scheduleId';
+        """
         val rowsNum = executeUpdate(query)
-        getLogger().info("$rowsNum rows have been deleted")
+        Log.info("$rowsNum rows have been deleted")
     }
 
 }

@@ -7,7 +7,6 @@ import dao.models.TeacherScheduleDaoModel
 import java.util.*
 
 interface ScheduleService {
-
     fun getSchedule(scheduleId: UUID): ScheduleDaoModel
 
     fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel>
