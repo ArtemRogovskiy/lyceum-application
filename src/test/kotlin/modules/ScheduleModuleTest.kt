@@ -9,9 +9,9 @@ import dao.models.TeacherScheduleDaoModel
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import listOfClassScheduleDaoModels
 import listOfTeacherScheduleDaoModels
 import org.junit.Rule
@@ -47,7 +47,7 @@ class ScheduleModuleTest : KoinTest {
     @Test
     fun `getSchedule route test OK status`(): Unit = withTestApplication(Application::scheduleModule) {
         val mockScheduleDao = declareMock<ScheduleDao> {
-            every { getSchedule(scheduleId) } returns ScheduleDaoModel(
+            coEvery { getSchedule(scheduleId) } returns ScheduleDaoModel(
                 "7b89ea87-27e8-11eb-aa2f-0242ac140002",
                 "6e5cd906-27e8-11eb-aa2f-0242ac140002",
                 "21",
@@ -61,7 +61,7 @@ class ScheduleModuleTest : KoinTest {
             assertEquals(scheduleDaoModel, gson.fromJson(response.content, ScheduleDaoModel::class.java))
         }
 
-        verify {
+        coVerify {
             mockScheduleDao.getSchedule(scheduleId)
         }
     }
@@ -69,7 +69,7 @@ class ScheduleModuleTest : KoinTest {
     @Test
     fun `getClassSchedule route test OK status`(): Unit = withTestApplication(Application::scheduleModule) {
         val mockScheduleDao = declareMock<ScheduleDao> {
-            every { getClassSchedule(10, "А") } returns listOf(
+            coEvery { getClassSchedule(10, "А") } returns listOf(
                 ClassScheduleDaoModel(
                     0,
                     "09:55:00",
@@ -100,7 +100,7 @@ class ScheduleModuleTest : KoinTest {
             )
         }
 
-        verify {
+        coVerify {
             mockScheduleDao.getClassSchedule(10, "А")
         }
     }
@@ -121,7 +121,7 @@ class ScheduleModuleTest : KoinTest {
     @Test
     fun `getTeacherSchedule route test OK status`(): Unit = withTestApplication(Application::scheduleModule) {
         val mockScheduleDao = declareMock<ScheduleDao> {
-            every { getTeacherSchedule(teacherId) } returns listOf(
+            coEvery { getTeacherSchedule(teacherId) } returns listOf(
                 TeacherScheduleDaoModel(
                     0,
                     "09:55:00",
@@ -150,7 +150,7 @@ class ScheduleModuleTest : KoinTest {
             )
         }
 
-        verify {
+        coVerify {
             mockScheduleDao.getTeacherSchedule(teacherId)
         }
     }
@@ -168,7 +168,7 @@ class ScheduleModuleTest : KoinTest {
     @Test
     fun `addSchedule route test CREATED status`(): Unit = withTestApplication(Application::scheduleModule) {
         val mockScheduleDao = declareMock<ScheduleDao> {
-            every { addSchedule(classSchedule) } returns scheduleId
+            coEvery { addSchedule(classSchedule) } returns scheduleId
         }
         handleRequest(HttpMethod.Post, "/schedules") {
             addHeader("content-type", "application/json")
@@ -178,7 +178,7 @@ class ScheduleModuleTest : KoinTest {
             assertEquals(scheduleId, gson.fromJson(response.content, UUID::class.java))
         }
 
-        verify {
+        coVerify {
             mockScheduleDao.addSchedule(classSchedule)
         }
     }
@@ -186,7 +186,7 @@ class ScheduleModuleTest : KoinTest {
     @Test
     fun `updateSchedule route test OK status`(): Unit = withTestApplication(Application::scheduleModule) {
         val mockScheduleDao = declareMock<ScheduleDao> {
-            every { updateSchedule(scheduleId, classSchedule) } returns Unit
+            coEvery { updateSchedule(scheduleId, classSchedule) } returns Unit
         }
         handleRequest(HttpMethod.Put, "/schedules/7b89ea87-27e8-11eb-aa2f-0242ac140002") {
             addHeader("content-type", "application/json")
@@ -195,7 +195,7 @@ class ScheduleModuleTest : KoinTest {
             assertEquals(200, response.status()?.value)
         }
 
-        verify {
+        coVerify {
             mockScheduleDao.updateSchedule(scheduleId, classSchedule)
         }
     }
@@ -203,13 +203,13 @@ class ScheduleModuleTest : KoinTest {
     @Test
     fun `deleteSchedule route test Accepted status`(): Unit = withTestApplication(Application::scheduleModule) {
         val mockScheduleDao = declareMock<ScheduleDao> {
-            every { deleteSchedule(scheduleId) } returns Unit
+            coEvery { deleteSchedule(scheduleId) } returns Unit
         }
         handleRequest(HttpMethod.Delete, "/schedules/7b89ea87-27e8-11eb-aa2f-0242ac140002").apply {
             assertEquals(202, response.status()?.value)
         }
 
-        verify {
+        coVerify {
             mockScheduleDao.deleteSchedule(scheduleId)
         }
     }
