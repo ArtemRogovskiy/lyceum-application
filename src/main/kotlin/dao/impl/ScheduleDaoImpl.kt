@@ -5,6 +5,8 @@ import dao.ScheduleDao
 import dao.models.ClassScheduleDaoModel
 import dao.models.ScheduleDaoModel
 import dao.models.TeacherScheduleDaoModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import util.Log
 import util.executeQuery
 import util.executeUpdate
@@ -17,7 +19,9 @@ class ScheduleDaoImpl : ScheduleDao {
                     from mgol.class_schedule
                     where id = '$scheduleId';
         """
-        return executeQuery(query, ScheduleDaoModel.scheduleFromResultSet)[0]
+        return withContext(Dispatchers.Default) {
+            executeQuery(query, ScheduleDaoModel.scheduleFromResultSet)[0]
+        }
     }
 
     override suspend fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel> {
@@ -36,9 +40,11 @@ class ScheduleDaoImpl : ScheduleDao {
                     and c.number = $classNumber 
                     order by day_of_week, start_time;
         """
-        val schedule = executeQuery(query, ClassScheduleDaoModel.classSchedulesFromResultSet)
-        Log.debug("List of ClassSchedule from db: $schedule")
-        return schedule
+        return withContext(Dispatchers.Default) {
+            val schedule = executeQuery(query, ClassScheduleDaoModel.classSchedulesFromResultSet)
+            Log.debug("List of ClassSchedule from db: $schedule")
+            schedule
+        }
     }
 
     override suspend fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel> {
@@ -56,9 +62,11 @@ class ScheduleDaoImpl : ScheduleDao {
                     where cs.teacher_id = '$teacherId' 
                     order by day_of_week, start_time;
         """
-        val schedule = executeQuery(query, TeacherScheduleDaoModel.teacherSchedulesFromResultSet)
-        Log.debug("List of TeacherSchedule from db: $schedule")
-        return schedule
+        return withContext(Dispatchers.Default) {
+            val schedule = executeQuery(query, TeacherScheduleDaoModel.teacherSchedulesFromResultSet)
+            Log.debug("List of TeacherSchedule from db: $schedule")
+            schedule
+        }
     }
 
     override suspend fun addSchedule(classSchedule: ClassSchedule): UUID {
@@ -69,8 +77,10 @@ class ScheduleDaoImpl : ScheduleDao {
                 '${classSchedule.teacherId}', ${classSchedule.room}, '${classSchedule.classId}', 
                 '${classSchedule.subjectId}', ${classSchedule.period});
         """
-        executeUpdate(query)
-        return id
+        return withContext(Dispatchers.Default) {
+            executeUpdate(query)
+            id
+        }
     }
 
     override suspend fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule) {
@@ -80,16 +90,20 @@ class ScheduleDaoImpl : ScheduleDao {
                 class_id = '${classSchedule.classId}', subject_id = '${classSchedule.subjectId}', 
                 period_id = ${classSchedule.period} where id = '$scheduleId';
         """
-        val rowsNum = executeUpdate(query)
-        Log.info("$rowsNum rows have been updated")
+        withContext(Dispatchers.Default) {
+            val rowsNum = executeUpdate(query)
+            Log.info("$rowsNum rows have been updated")
+        }
     }
 
     override suspend fun deleteSchedule(scheduleId: UUID) {
         val query = """
             delete from mgol.class_schedule where id = '$scheduleId';
         """
-        val rowsNum = executeUpdate(query)
-        Log.info("$rowsNum rows have been deleted")
+        withContext(Dispatchers.Default) {
+            val rowsNum = executeUpdate(query)
+            Log.info("$rowsNum rows have been deleted")
+        }
     }
 
 }
