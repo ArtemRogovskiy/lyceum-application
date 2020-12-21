@@ -1,5 +1,7 @@
 import controllers.impl.ScheduleControllerImpl
 import dao.impl.ScheduleDaoImpl
+import controllers.impl.UserControllerImpl
+import dao.impl.UserDaoImpl
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -12,6 +14,7 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import services.impl.ScheduleServiceImpl
+import services.impl.UserServiceImpl
 import java.text.DateFormat
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -38,9 +41,17 @@ fun Application.scheduleModule() {
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.userModule() {
-    routing {
-        get("/user") {
-            call.respondText("Hello World!")
+    install(DefaultHeaders)
+    install(Compression)
+    install(CallLogging)
+    install(ContentNegotiation) {
+        gson {
+            setDateFormat(DateFormat.LONG)
+            setPrettyPrinting()
         }
+    }
+    val userService = userServiceImpl(UserDaoImpl())
+    routing {
+        UserControllerImpl(this, userService).addRouts()
     }
 }

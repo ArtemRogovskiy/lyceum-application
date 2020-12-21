@@ -1,5 +1,12 @@
 package dao
 
+import services.UserService
+import dao.UserDao
+import dao.models.UserDaoModel
+import dao.models.UserStatusDaoModel
+import dao.models.RoleDaoModel
+import java.util.*
+
 interface UserDao {
 
     fun getUser(userId: UUID): UserDaoModel
