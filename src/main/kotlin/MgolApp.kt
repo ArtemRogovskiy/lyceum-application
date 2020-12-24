@@ -41,16 +41,7 @@ fun Application.scheduleModule() {
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.userModule() {
-    install(DefaultHeaders)
-    install(Compression)
-    install(CallLogging)
-    install(ContentNegotiation) {
-        gson {
-            setDateFormat(DateFormat.LONG)
-            setPrettyPrinting()
-        }
-    }
-    val userService = userServiceImpl(UserDaoImpl())
+    val userService = UserServiceImpl(UserDaoImpl())
     routing {
         UserControllerImpl(this, userService).addRouts()
     }

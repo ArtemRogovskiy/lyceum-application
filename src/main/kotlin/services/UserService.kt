@@ -1,6 +1,6 @@
 package services
 
-import services.UserService
+import controllers.models.User
 import dao.UserDao
 import dao.models.UserDaoModel
 import dao.models.UserStatusDaoModel
@@ -19,7 +19,7 @@ interface UserService {
 
     fun getUserRole(userId: UUID): List<RoleDaoModel>
 
-    fun addUser(User: User, roleId: Int): UUID
+    fun addUser(user: User, roleId: Int): UUID
 
     fun updateUser(userId: UUID, User: User)
 

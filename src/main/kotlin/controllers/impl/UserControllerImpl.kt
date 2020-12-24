@@ -1,7 +1,6 @@
 package controllers.impl
 
 import controllers.UserController
-import services.UserService
 import controllers.models.User
 import dao.UserDao
 import dao.models.UserDaoModel
@@ -30,18 +29,30 @@ class UserControllerImpl(
                 call.respond(getUser(UUID.fromString(userId)))
             }
 
-            // http://localhost:8080/users/7b89ea87-27e8-11eb-aa2f-0242ac140002
+            // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
             get("/{username}") {
-                val username = call.parameters["username"]
-                username ?: getLogger().warn("Empty path parameter.")
-                call.respond(getUserByName(UUID.fromString(username)))
+                val queryParameters = call.request.queryParameters
+                val username = queryParameters["username"]
+                if (username == null) {
+                    getLogger().warn("Wrong parameters. Expected 'username' type of String")
+                    call.respond(HttpStatusCode.NotFound)
+                } else {
+                    val response = getUserByName(username)
+                    call.respond(response)
+                }
             }
 
-            // http://localhost:8080/users/7b89ea87-27e8-11eb-aa2f-0242ac140002
+            // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
             get("/{email}") {
-                val email = call.parameters["email"]
-                email ?: getLogger().warn("Empty path parameter.")
-                call.respond(getUserByEmail(UUID.fromString(email)))
+                val queryParameters = call.request.queryParameters
+                val email = queryParameters["email"]
+                if (email == null) {
+                    getLogger().warn("Wrong parameters. Expected 'email' type of String")
+                    call.respond(HttpStatusCode.NotFound)
+                } else {
+                    val response = getUserByName(email)
+                    call.respond(response)
+                }
             }
 
             // http://localhost:8080/users/status?statusId=10&classLetter=а
@@ -60,20 +71,27 @@ class UserControllerImpl(
             // http://localhost:8080/users/role?userId=10&classLetter=а
             get("/role") {
                 val queryParameters = call.request.queryParameters
-                val userId = queryParameters["userId"]?.toInt()
+                val userId = queryParameters["userId"]
                 if (userId == null) {
                     getLogger().warn("Wrong parameters. Expected 'userId' type of Int")
                     call.respond(HttpStatusCode.NotFound)
                 } else {
-                    val response = getUserRole(userId)
+                    val response = getUserRole(UUID.fromString(userId))
                     call.respond(response)
                 }
             }
 
-            post {
+            post("/{roleId}") {
                 val user = call.receive<User>()
-                val id = addUser(user)
-                call.respond(HttpStatusCode.Created, id)
+                val queryParameters = call.request.queryParameters
+                val roleId = queryParameters["roleId"]?.toInt()
+                if (roleId == null) {
+                    getLogger().warn("Wrong parameters. Expected 'roleId' type of Int")
+                    call.respond(HttpStatusCode.NotFound)
+                } else {
+                    val id = addUser(user, roleId)
+                    call.respond(HttpStatusCode.Created, id)
+                }
             }
 
             put("/{id}") {
@@ -98,34 +116,34 @@ class UserControllerImpl(
     }
 
     override fun getUser(userId: UUID): UserDaoModel {
-        return userDao.getUser(userId)
+        return userService.getUser(userId)
     }
 
     override fun getUserByName(username: String): UserDaoModel {
-        return userDao.getUserByName(username)
+        return userService.getUserByName(username)
     }
 
     override fun getUserByEmail(email: String): UserDaoModel {
-        return userDao.getUserByEmail(email)
+        return userService.getUserByEmail(email)
     }
 
     override fun getUserStatus(userStatusId: Int): UserStatusDaoModel {
-        return userDao.getUserStatus(userStatusId)
+        return userService.getUserStatus(userStatusId)
     }
 
     override fun getUserRole(userId: UUID): List<RoleDaoModel> {
-        return userDao.getUserRole(userId)
+        return userService.getUserRole(userId)
     }
 
-    override fun addUser(User: User, roleId: Int): UUID {
-        return userDao.addUser(User: User, roleId: Int)
+    override fun addUser(user: User, roleId: Int): UUID {
+        return userService.addUser(user, roleId)
     }
 
     override fun updateUser(userId: UUID, User: User) {
-        return userDao.updateUser(userId: UUID, User: User)
+        userService.updateUser(userId, User)
     }
 
     override fun deleteUser(userId: UUID) {
-        return userDao.deleteUser(userId: UUID)
+        userService.deleteUser(userId)
     }
 }

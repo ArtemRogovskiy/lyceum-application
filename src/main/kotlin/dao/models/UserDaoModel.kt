@@ -14,7 +14,7 @@ class UserDaoModel(resultSet: ResultSet) {
     val statusId: Int = resultSet.getInt("user_status_id")
 
     companion object {
-        val usersFromResultSet: (ResultSet) -> List<UserDaoModel> = {
+        val userFromResultSet: (ResultSet) -> List<UserDaoModel> = {
             val list = mutableListOf<UserDaoModel>()
             while (it.next()) {
                 list.add(UserDaoModel(it))

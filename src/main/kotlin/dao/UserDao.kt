@@ -1,7 +1,6 @@
 package dao
 
-import services.UserService
-import dao.UserDao
+import controllers.models.User
 import dao.models.UserDaoModel
 import dao.models.UserStatusDaoModel
 import dao.models.RoleDaoModel
@@ -15,11 +14,13 @@ interface UserDao {
 
     fun getUserByEmail(email: String): UserDaoModel
 
+    fun getUserByClass(classId: String): UserDaoModel
+
     fun getUserStatus(userStatusId: Int): UserStatusDaoModel
 
     fun getUserRole(userId: UUID): List<RoleDaoModel>
 
-    fun addUser(User: User): UUID
+    fun addUser(user: User, roleId: Int): UUID
 
     fun updateUser(userId: UUID, User: User)
 

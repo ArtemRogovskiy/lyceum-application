@@ -1,11 +1,14 @@
 package dao.impl
 
-import dao.UserDao
 import services.UserService
 import dao.UserDao
+import controllers.models.User
 import dao.models.UserDaoModel
 import dao.models.UserStatusDaoModel
 import dao.models.RoleDaoModel
+import util.executeQuery
+import util.executeUpdate
+import getLogger
 import java.util.*
 
 class UserDaoImpl : UserDao {
@@ -51,7 +54,7 @@ class UserDaoImpl : UserDao {
             "select us.name from mgol.user_status us join mgol.user u" +
                     "on us.id = u.user_status_id" +
                     "where u.id = '$userId';"
-        return executeQuery(query, UserStatusDaoModel.userFromResultSet)[0]
+        return executeQuery(query, UserStatusDaoModel.userStatusFromResultSet)[0]
     }
 
     override fun getUserRole(userId: UUID): List<RoleDaoModel> {
@@ -59,20 +62,20 @@ class UserDaoImpl : UserDao {
             "select r.name from mgol.role r join mgol.user_role ur" +
                     "on r.id = ur.role_id join mgol.user u" +
                     "where ur.user_id = '$userId';"
-        return executeQuery(query, UserStatusDaoModel.userFromResultSet)[0]
+        return executeQuery(query, RoleDaoModel.rolesFromResultSet)
     }
 
-    override fun addUser(User: User, roleId: Int): UUID {
+    override fun addUser(user: User, roleId: Int): UUID {
         val id = UUID.randomUUID()
-        val query = "insert into mgol.user " +
+        val queryUser = "insert into mgol.user " +
                 "(id, username, email, password last_name, first_name, middle_name, class_id, user_status_id) values('$id', " +
-                "'${User.username}', ${User.email}, '${User.password}', " +
-                "'${User.last_name}', ${User.first_name}, '${User.middle_name}', " +
-                "'${User.class_id}', ${User.user_status_id});"
-        executeUpdate(query)
-        val query = "insert into mgol.user_role " +
+                "'${user.username}', ${user.email}, '${user.password}', " +
+                "'${user.last_name}', ${user.first_name}, '${user.middle_name}', " +
+                "'${user.class_id}', ${user.user_status_id});"
+        executeUpdate(queryUser)
+        val queryRole = "insert into mgol.user_role " +
                 "(user_id, role_id) values('$id', " + "'$roleId');"
-        executeUpdate(query)
+        executeUpdate(queryRole)
         return id
     }
 
@@ -88,10 +91,11 @@ class UserDaoImpl : UserDao {
     }
 
     override fun deleteUser(userId: UUID) {
-        val query = "delete from mgol.user where id = '$userId';"
-        val rowsNum = executeUpdate(query)
-        val query = "delete from mgol.user_role where user_id = '$userId';"
-        val rowsNum += executeUpdate(query)
-        getLogger().info("$rowsNum rows have been deleted")
+        val queryUser = "delete from mgol.user where id = '$userId';"
+        val queryRole = "delete from mgol.user_role where user_id = '$userId';"
+        val rowsNumUser = executeUpdate(queryUser)
+        val rowsNumRole = executeUpdate(queryRole)
+        getLogger().info("$rowsNumUser rows have been deleted from User")
+        getLogger().info("$rowsNumRole rows have been deleted from UserRole")
     }
 }
