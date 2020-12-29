@@ -2,7 +2,7 @@ package dao.models
 
 import java.sql.ResultSet
 
-class SchoolClassDaoModel(
+data class SchoolClassDaoModel(
     val id: String,
     val number: Int,
     val letter: String,

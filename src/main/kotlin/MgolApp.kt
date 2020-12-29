@@ -4,7 +4,7 @@ fun main(args: Array<String>) {
     // Koin DI
     startKoin {
         printLogger()
-        modules(listOf(scheduleKoinModule, schoolClassKoinModule))
+        modules(listOf(baseKoinModule))
     }
     io.ktor.server.netty.EngineMain.main(args)
 }

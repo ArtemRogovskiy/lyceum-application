@@ -1,5 +1,6 @@
 package modules
 
+import baseKoinModule
 import classSchedule
 import com.google.gson.Gson
 import dao.ScheduleDao
@@ -22,7 +23,6 @@ import org.koin.test.mock.MockProviderRule
 import org.koin.test.mock.declareMock
 import scheduleDaoModel
 import scheduleId
-import scheduleKoinModule
 import schedulePostBody
 import schedulePutBody
 import teacherId
@@ -36,7 +36,7 @@ class ScheduleModuleTest : KoinTest {
     @get:Rule
     val koinTestRule = KoinTestRule.create {
         printLogger()
-        modules(scheduleKoinModule)
+        modules(baseKoinModule)
     }
 
     @get:Rule

@@ -6,6 +6,7 @@ import dao.models.SchoolClassDaoModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import util.Log
+import util.convertUUIDToValidString
 import util.executeQuery
 import util.executeUpdate
 import java.util.*
@@ -72,14 +73,6 @@ class SchoolClassDaoImpl : SchoolClassDao {
         withContext(Dispatchers.Default) {
             val rowsNum = executeUpdate(query)
             Log.info("$rowsNum rows have been deleted from mgol.class")
-        }
-    }
-
-    private fun convertUUIDToValidString(id: UUID?): String? {
-        return if (id != null) {
-            "'${id}'"
-        } else {
-            null
         }
     }
 }
