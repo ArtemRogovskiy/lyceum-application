@@ -8,15 +8,15 @@ import java.util.*
 
 interface ScheduleDao {
 
-    fun getSchedule(scheduleId: UUID): ScheduleDaoModel
+    suspend fun getSchedule(scheduleId: UUID): ScheduleDaoModel
 
-    fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel>
+    suspend fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel>
 
-    fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel>
+    suspend fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel>
 
-    fun addSchedule(classSchedule: ClassSchedule): UUID
+    suspend fun addSchedule(classSchedule: ClassSchedule): UUID
 
-    fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule)
+    suspend fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule)
 
-    fun deleteSchedule(scheduleId: UUID)
+    suspend fun deleteSchedule(scheduleId: UUID)
 }

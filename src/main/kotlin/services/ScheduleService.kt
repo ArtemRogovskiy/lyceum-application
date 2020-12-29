@@ -7,16 +7,15 @@ import dao.models.TeacherScheduleDaoModel
 import java.util.*
 
 interface ScheduleService {
+    suspend fun getSchedule(scheduleId: UUID): ScheduleDaoModel
 
-    fun getSchedule(scheduleId: UUID): ScheduleDaoModel
+    suspend fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel>
 
-    fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel>
+    suspend fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel>
 
-    fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel>
+    suspend fun addSchedule(classSchedule: ClassSchedule): UUID
 
-    fun addSchedule(classSchedule: ClassSchedule): UUID
+    suspend fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule)
 
-    fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule)
-
-    fun deleteSchedule(scheduleId: UUID)
+    suspend fun deleteSchedule(scheduleId: UUID)
 }

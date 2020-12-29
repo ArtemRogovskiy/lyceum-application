@@ -1,7 +1,6 @@
 package modules
 
 import controllers.models.ClassSchedule
-import getLogger
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.gson.*
@@ -11,6 +10,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 import services.ScheduleService
+import util.Log
 import java.text.DateFormat
 import java.util.*
 
@@ -33,7 +33,7 @@ fun Application.scheduleModule() {
             // http://localhost:8080/schedules/7b89ea87-27e8-11eb-aa2f-0242ac140002
             get("/{scheduleId}") {
                 val scheduleId = call.parameters["scheduleId"]
-                scheduleId ?: getLogger().warn("Empty path parameter.")
+                scheduleId ?: Log.warn("Empty path parameter.")
                 call.respond(scheduleService.getSchedule(UUID.fromString(scheduleId)))
             }
 
@@ -43,7 +43,7 @@ fun Application.scheduleModule() {
                 val classNumberParam = queryParameters["classNumber"]?.toInt()
                 val classLetterParam = queryParameters["classLetter"]?.toUpperCase()
                 if (classNumberParam == null || classLetterParam == null) {
-                    getLogger().warn("Wrong parameters. Expected 'classNumber' type of Int and 'classLetter' type of String")
+                    Log.warn("Wrong parameters. Expected 'classNumber' type of Int and 'classLetter' type of String")
                     call.respond(HttpStatusCode.NotFound)
                 } else {
                     val response = scheduleService.getClassSchedule(classNumberParam, classLetterParam)
@@ -56,7 +56,7 @@ fun Application.scheduleModule() {
                 val queryParameters = call.request.queryParameters
                 val teacherIdParam = queryParameters["teacherId"]
                 if (teacherIdParam == null) {
-                    getLogger().warn("Wrong parameter. Expected 'teacherId' type of UUID")
+                    Log.warn("Wrong parameter. Expected 'teacherId' type of UUID")
                     call.respond(HttpStatusCode.NotFound)
                 } else {
                     val response = scheduleService.getTeacherSchedule(UUID.fromString(teacherIdParam))
@@ -73,14 +73,14 @@ fun Application.scheduleModule() {
             put("/{scheduleId}") {
                 val scheduleId = call.parameters["scheduleId"]
                 val updatedSchedule = call.receive<ClassSchedule>()
-                scheduleId ?: getLogger().warn("Empty path parameter.")
+                scheduleId ?: Log.warn("Empty path parameter.")
                 scheduleService.updateSchedule(UUID.fromString(scheduleId), updatedSchedule)
                 call.respond(HttpStatusCode.OK)
             }
 
             delete("/{scheduleId}") {
                 val scheduleId = call.parameters["scheduleId"]
-                scheduleId ?: getLogger().warn("Empty path parameter.")
+                scheduleId ?: Log.warn("Empty path parameter.")
                 scheduleService.deleteSchedule(UUID.fromString(scheduleId))
                 call.respond(HttpStatusCode.Accepted)
             }
