@@ -1,0 +1,11 @@
+POST http://127.0.0.1:8080/news/
+Content-Type: application/json
+
+{
+  "createdBy": "6e5cd906-27e8-11eb-aa2f-0242ac140002",
+  "title": "New",
+  "message": "News created",
+  "prover": "6e5cd906-27e8-11eb-aa2f-0242ac140002",
+  "isApproved": true,
+  "notificationTypeId": "62648468-444e-11eb-b24f-0242ac140002"
+}

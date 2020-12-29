@@ -1,4 +1,0 @@
-PUT http://127.0.0.1:8080/schedules/7b89ea87-27e8-11eb-aa2f-0242ac140002
-Content-Type: application/json
-
-{"teacherId": "6e5cd906-27e8-11eb-aa2f-0242ac140002", "room": 21, "classId": "660ef080-27e8-11eb-aa2f-0242ac140002", "subjectId": "4e7e0f73-27e8-11eb-aa2f-0242ac140002", "period": 30}
