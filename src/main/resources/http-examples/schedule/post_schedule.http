@@ -1,0 +1,10 @@
+POST http://127.0.0.1:8080/schedules
+Content-Type: application/json
+
+{
+  "teacherId": "6e5cd906-27e8-11eb-aa2f-0242ac140002",
+  "room": 1,
+  "classId": "660ef080-27e8-11eb-aa2f-0242ac140002",
+  "subjectId": "4e7e0f73-27e8-11eb-aa2f-0242ac140002",
+  "period": 30
+}

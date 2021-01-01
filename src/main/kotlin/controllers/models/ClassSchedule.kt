@@ -3,6 +3,5 @@ package controllers.models
 import java.util.*
 
 data class ClassSchedule(
-    val teacherId: UUID /*UUID*/, val room: Int, val classId: UUID /*UUID*/,
-    val subjectId: UUID /*UUID*/, val period: Int
+    val teacherId: UUID, val room: Int, val classId: UUID, val subjectId: UUID, val period: Int
 )

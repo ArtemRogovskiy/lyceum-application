@@ -19,11 +19,9 @@ fun getConnection(): Connection? {
 
     var connection: Connection? = null
     try {
-        connection = DriverManager.getConnection(
-            url, connectionProps
-        )
+        connection = DriverManager.getConnection(url, connectionProps)
     } catch (ex: Exception) {
-        ex.printStackTrace()
+        Log.error("Exception during DB connection: ", ex)
     }
     return connection
 }
