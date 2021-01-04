@@ -8,7 +8,7 @@ import dao.models.UserStatusDaoModel
 import dao.models.RoleDaoModel
 import util.executeQuery
 import util.executeUpdate
-import getLogger
+import util.Log
 import java.util.*
 
 class UserDaoImpl : UserDao {
@@ -87,7 +87,7 @@ class UserDaoImpl : UserDao {
                 "class_id = '${User.class_id}', user_status_id = '${User.user_status_id}', " +
                 "where id = '$userId';"
         val rowsNum = executeUpdate(query)
-        getLogger().info("$rowsNum rows have been updated")
+        Log.info("$rowsNum rows have been updated")
     }
 
     override fun deleteUser(userId: UUID) {
@@ -95,7 +95,7 @@ class UserDaoImpl : UserDao {
         val queryRole = "delete from mgol.user_role where user_id = '$userId';"
         val rowsNumUser = executeUpdate(queryUser)
         val rowsNumRole = executeUpdate(queryRole)
-        getLogger().info("$rowsNumUser rows have been deleted from User")
-        getLogger().info("$rowsNumRole rows have been deleted from UserRole")
+        Log.info("$rowsNumUser rows have been deleted from User")
+        Log.info("$rowsNumRole rows have been deleted from UserRole")
     }
 }
