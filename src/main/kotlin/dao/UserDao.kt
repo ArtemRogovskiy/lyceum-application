@@ -1,6 +1,6 @@
 package dao
 
-import controllers.models.User
+import controllers.models.UserModel
 import dao.models.UserDaoModel
 import dao.models.UserStatusDaoModel
 import dao.models.RoleDaoModel
@@ -20,9 +20,9 @@ interface UserDao {
 
     fun getUserRole(userId: UUID): List<RoleDaoModel>
 
-    fun addUser(user: User, roleId: Int): UUID
+    fun addUser(user: UserModel, roleId: Int): UUID
 
-    fun updateUser(userId: UUID, User: User)
+    fun updateUser(userId: UUID, User: UserModel)
 
     fun deleteUser(userId: UUID)
 }

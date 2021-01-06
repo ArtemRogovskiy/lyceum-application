@@ -1,6 +1,6 @@
 package modules
 
-import controllers.models.User
+import controllers.models.UserModel
 import org.koin.ktor.ext.inject
 
 import dao.UserDao
@@ -83,7 +83,7 @@ fun Application.userModule() {
             }
 
             post("/{roleId}") {
-                val user = call.receive<User>()
+                val user = call.receive<UserModel>()
                 val queryParameters = call.request.queryParameters
                 val roleId = queryParameters["roleId"]?.toInt()
                 if (roleId == null) {
@@ -97,7 +97,7 @@ fun Application.userModule() {
 
             put("/{id}") {
                 val userId = call.parameters["id"]
-                val updatedUser = call.receive<User>()
+                val updatedUser = call.receive<UserModel>()
                 userId ?: Log.info("Empty path parameter.")
                 userService.updateUser(UUID.fromString(userId), updatedUser)
                 call.respond(HttpStatusCode.OK)

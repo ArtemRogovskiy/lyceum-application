@@ -1,7 +1,7 @@
 package services.impl
 
 import services.UserService
-import controllers.models.User
+import controllers.models.UserModel
 import dao.UserDao
 import dao.models.UserDaoModel
 import dao.models.UserStatusDaoModel
@@ -30,11 +30,11 @@ class UserServiceImpl(private val userDao: UserDao) : UserService {
         return userDao.getUserRole(userId)
     }
 
-    override fun addUser(user: User, roleId: Int): UUID {
+    override fun addUser(user: UserModel, roleId: Int): UUID {
         return userDao.addUser(user, roleId)
     }
 
-    override fun updateUser(userId: UUID, user: User) {
+    override fun updateUser(userId: UUID, user: UserModel) {
         userDao.updateUser(userId, user)
     }
 

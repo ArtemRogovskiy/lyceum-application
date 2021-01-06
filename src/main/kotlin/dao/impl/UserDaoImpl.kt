@@ -2,7 +2,7 @@ package dao.impl
 
 import services.UserService
 import dao.UserDao
-import controllers.models.User
+import controllers.models.UserModel
 import dao.models.UserDaoModel
 import dao.models.UserStatusDaoModel
 import dao.models.RoleDaoModel
@@ -65,7 +65,7 @@ class UserDaoImpl : UserDao {
         return executeQuery(query, RoleDaoModel.rolesFromResultSet)
     }
 
-    override fun addUser(user: User, roleId: Int): UUID {
+    override fun addUser(user: UserModel, roleId: Int): UUID {
         val id = UUID.randomUUID()
         val queryUser = "insert into mgol.user " +
                 "(id, username, email, password last_name, first_name, middle_name, class_id, user_status_id) values('$id', " +
@@ -79,7 +79,7 @@ class UserDaoImpl : UserDao {
         return id
     }
 
-    override fun updateUser(userId: UUID, User: User) {
+    override fun updateUser(userId: UUID, User: UserModel) {
         val query = "update mgol.user " +
                 "set username = '${User.username}', email = ${User.email}, " +
                 "password = '${User.password}', last_name = '${User.last_name}', " +
