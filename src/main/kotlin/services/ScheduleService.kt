@@ -1,11 +1,21 @@
 package services
 
-import dao.models.ClassSchedule
-import dao.models.TeacherSchedule
+import controllers.models.ClassSchedule
+import dao.models.ClassScheduleDaoModel
+import dao.models.ScheduleDaoModel
+import dao.models.TeacherScheduleDaoModel
+import java.util.*
 
 interface ScheduleService {
+    suspend fun getSchedule(scheduleId: UUID): ScheduleDaoModel
 
-    fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassSchedule>
+    suspend fun getClassSchedule(classNumber: Int, classLetter: String): List<ClassScheduleDaoModel>
 
-    fun getTeacherSchedule(teacherId: String): List<TeacherSchedule>
+    suspend fun getTeacherSchedule(teacherId: UUID): List<TeacherScheduleDaoModel>
+
+    suspend fun addSchedule(classSchedule: ClassSchedule): UUID
+
+    suspend fun updateSchedule(scheduleId: UUID, classSchedule: ClassSchedule)
+
+    suspend fun deleteSchedule(scheduleId: UUID)
 }
