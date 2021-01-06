@@ -16,7 +16,7 @@ plugins {
 
 group 'org.example'
 version '1.0-SNAPSHOT'
-mainClassName = "io.ktor.server.netty.EngineMain"
+mainClassName = "MgolAppKt"
 
 sourceSets {
     main.kotlin.srcDirs = ['src/main/kotlin']
