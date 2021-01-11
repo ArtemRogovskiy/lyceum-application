@@ -9,19 +9,19 @@ import java.util.*
 
 interface UserService {
 
-    fun getUser(userId: UUID): UserDaoModel
+   suspend fun getUser(userId: UUID): UserDaoModel
 
-    fun getUserByName(username: String): UserDaoModel
+   suspend fun getUserByName(username: String): UserDaoModel
 
-    fun getUserByEmail(email: String): UserDaoModel
+   suspend fun getUserByEmail(email: String): UserDaoModel
 
-    fun getUserStatus(userStatusId: Int): UserStatusDaoModel
+   suspend fun getUserStatus(userStatusId: Int): UserStatusDaoModel
 
-    fun getUserRole(userId: UUID): List<RoleDaoModel>
+   suspend fun getUserRole(userId: UUID): List<RoleDaoModel>
 
-    fun addUser(user: UserModel, roleId: Int): UUID
+   suspend fun addUser(user: UserModel, roleId: Int): UUID
 
-    fun updateUser(userId: UUID, User: UserModel)
+   suspend fun updateUser(userId: UUID, User: UserModel)
 
-    fun deleteUser(userId: UUID)
+   suspend fun deleteUser(userId: UUID)
 }

@@ -10,35 +10,35 @@ import java.util.*
 
 class UserServiceImpl(private val userDao: UserDao) : UserService {
 
-    override fun getUser(userId: UUID): UserDaoModel {
+    override suspend fun getUser(userId: UUID): UserDaoModel {
         return userDao.getUser(userId)
     }
 
-    override fun getUserByName(username: String): UserDaoModel {
+    override suspend fun getUserByName(username: String): UserDaoModel {
         return userDao.getUserByName(username)
     }
 
-    override fun getUserByEmail(email: String): UserDaoModel {
+    override suspend fun getUserByEmail(email: String): UserDaoModel {
         return userDao.getUserByEmail(email)
     }
 
-    override fun getUserStatus(userStatusId: Int): UserStatusDaoModel {
+    override suspend fun getUserStatus(userStatusId: Int): UserStatusDaoModel {
         return userDao.getUserStatus(userStatusId)
     }
 
-    override fun getUserRole(userId: UUID): List<RoleDaoModel> {
+    override suspend fun getUserRole(userId: UUID): List<RoleDaoModel> {
         return userDao.getUserRole(userId)
     }
 
-    override fun addUser(user: UserModel, roleId: Int): UUID {
+    override suspend fun addUser(user: UserModel, roleId: Int): UUID {
         return userDao.addUser(user, roleId)
     }
 
-    override fun updateUser(userId: UUID, user: UserModel) {
+    override suspend fun updateUser(userId: UUID, user: UserModel) {
         userDao.updateUser(userId, user)
     }
 
-    override fun deleteUser(userId: UUID) {
+    override suspend fun deleteUser(userId: UUID) {
         userDao.deleteUser(userId)
     }
 }

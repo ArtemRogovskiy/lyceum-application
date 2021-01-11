@@ -13,25 +13,30 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import services.UserService
+import services.SchoolClassService
 import util.Log
 import java.util.*
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.userModule() {
     val userService by inject<UserService>()
+    val schoolClassService by inject<SchoolClassService>()
 
 
     routing() {
         route("/users") {
-            // http://localhost:8080/users/7b89ea87-27e8-11eb-aa2f-0242ac140002
+            // http://0.0.0.0:8080/users/440eea88-4eb2-11eb-b245-0242ac180002
             get("/{id}") {
+
                 val userId = call.parameters["id"]
                 userId ?: Log.info("Empty path parameter.")
-                call.respond(userService.getUser(UUID.fromString(userId)))
+                val uID = UUID.fromString(userId)
+                val response = userService.getUser(uID)
+                call.respond(response)
             }
 
             // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
-            get("/{username}") {
+            get("/username/{username}") {
                 val queryParameters = call.request.queryParameters
                 val username = queryParameters["username"]
                 if (username == null) {
@@ -44,7 +49,7 @@ fun Application.userModule() {
             }
 
             // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
-            get("/{email}") {
+            get("/email/{email}") {
                 val queryParameters = call.request.queryParameters
                 val email = queryParameters["email"]
                 if (email == null) {
