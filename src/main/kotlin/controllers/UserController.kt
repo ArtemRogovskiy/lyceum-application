@@ -1,4 +1,0 @@
-package controllers
-
-interface UserController {
-}
