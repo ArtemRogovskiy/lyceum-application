@@ -1,9 +1,8 @@
-POST http://127.0.0.1:8080/classes
+POST http://127.0.0.1:8080/login
 Content-Type: application/json
 
 {
-  "number": 9,
-  "letter": "З",
-  "formMaster": "6e5cd906-27e8-11eb-aa2f-0242ac140002",
-  "classMonitor": "6e5cd906-27e8-11eb-aa2f-0242ac140002"
+  "username": "Artem",
+  "password": "secret",
+  "role": "role"
 }

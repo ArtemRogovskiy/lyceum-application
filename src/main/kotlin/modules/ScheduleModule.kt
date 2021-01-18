@@ -16,6 +16,13 @@ import java.util.*
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.scheduleModule() {
+    install(CORS) {
+        method(HttpMethod.Get)
+        method(HttpMethod.Post)
+        method(HttpMethod.Put)
+        method(HttpMethod.Delete)
+        anyHost()
+    }
     install(DefaultHeaders)
     install(Compression)
     install(CallLogging)
