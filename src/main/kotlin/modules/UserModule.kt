@@ -57,17 +57,21 @@ fun Application.userModule() {
     routing() {
 
         post("/login") {
-            val params = call.receiveParameters()
-            val username = params["username"]
-            val password = params["password"]
-            val user = userService.getUserByName(username)
-            val role = userService.getUserRole(UUID.fromString(user.user_id))
-            if (user != null && role != null &&  password == user.password) {
-                call.sessions.set(UserSession(username, role))
-                val redirectURL = call.sessions.get<OriginalRequestURI>()?.also {
-                    call.sessions.clear<OriginalRequestURI>()
+            val queryParameters = call.request.queryParameters
+            val username = queryParameters["username"]
+            val password = queryParameters["password"]
+            if (username != null && password != null) {
+                val user = userService.getUserByName(username)
+                val role = userService.getUserRole(UUID.fromString(user.id))[0]
+                if (user.password == password) {
+                    call.sessions.set(UserSession(username, role.name))
+                    val redirectURL = call.sessions.get<OriginalRequestURI>()?.also {
+                        call.sessions.clear<OriginalRequestURI>()
+                    }
+                    call.respondRedirect(redirectURL?.uri ?: "/")
+                } else {
+                    call.respondRedirect("/users/login")
                 }
-                call.respondRedirect(redirectURL?.uri ?: "/")
             } else {
                 call.respondRedirect("/users/login")
             }
