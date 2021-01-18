@@ -30,7 +30,7 @@ class UserDaoImpl : UserDao {
 
     override suspend fun getUserByName(username: String): UserDaoModel {
         val query = """
-           select id, username, email, last_name, first_name, middle_name, create_time, class_id, user_status_id 
+           select id, username, password, email, last_name, first_name, middle_name, create_time, class_id, user_status_id 
                 from mgol.user
                 where username = "$username";
             """.trimIndent()
@@ -41,7 +41,7 @@ class UserDaoImpl : UserDao {
 
     override suspend fun getUserByClass(classId: String): UserDaoModel {
          val query = """
-            select id, username, email, last_name, first_name, middle_name, create_time, class_id, user_status_id 
+            select id, username, password, email, last_name, first_name, middle_name, create_time, class_id, user_status_id 
                 from mgol.user
                 where class_id = "$classId";
             """.trimIndent()
@@ -52,7 +52,7 @@ class UserDaoImpl : UserDao {
 
     override suspend fun getUserByEmail(email: String): UserDaoModel {
         val query = """
-            select id, username, email, last_name, first_name, middle_name, create_time, class_id, user_status_id 
+            select id, username, password, email, last_name, first_name, middle_name, create_time, class_id, user_status_id 
                 from mgol.user
                 where email = "$email";
             """.trimIndent()

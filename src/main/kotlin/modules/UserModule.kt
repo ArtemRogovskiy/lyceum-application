@@ -36,11 +36,11 @@ fun Application.userModule() {
             }
 
             // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
-            get("/username/{username}") {
+            get("/username") {
                 val queryParameters = call.request.queryParameters
-                val username = queryParameters["username"]
+                val username = queryParameters["username"]?.toLowerCase()
                 if (username == null) {
-                    Log.info("Wrong parameters. Expected 'username' type of String")
+                    Log.warn("Wrong parameters. Expected 'username' type of String")
                     call.respond(HttpStatusCode.NotFound)
                 } else {
                     val response = userService.getUserByName(username)
@@ -49,14 +49,14 @@ fun Application.userModule() {
             }
 
             // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
-            get("/email/{email}") {
+            get("/email") {
                 val queryParameters = call.request.queryParameters
-                val email = queryParameters["email"]
+                val email = queryParameters["email"]?.toLowerCase()
                 if (email == null) {
                     Log.info("Wrong parameters. Expected 'email' type of String")
                     call.respond(HttpStatusCode.NotFound)
                 } else {
-                    val response = userService.getUserByName(email)
+                    val response = userService.getUserByEmail(email)
                     call.respond(response)
                 }
             }
