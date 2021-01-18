@@ -60,8 +60,9 @@ fun Application.userModule() {
             val params = call.receiveParameters()
             val username = params["username"]
             val password = params["password"]
-            val role = params["role"]
-            if (username != null && role != null &&  password == "secret") {
+            val user = userService.getUserByName(username)
+            val role = userService.getUserRole(UUID.fromString(user.user_id))
+            if (user != null && role != null &&  password == user.password) {
                 call.sessions.set(UserSession(username, role))
                 val redirectURL = call.sessions.get<OriginalRequestURI>()?.also {
                     call.sessions.clear<OriginalRequestURI>()
@@ -89,7 +90,7 @@ fun Application.userModule() {
                     call.respond(response)
                 }
 
-                // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
+                // http://localhost:8080/users/username?username=username
                 get("/username") {
                     val queryParameters = call.request.queryParameters
                     val username = queryParameters["username"]?.toLowerCase()
@@ -102,7 +103,7 @@ fun Application.userModule() {
                     }
                 }
 
-                // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
+                // http://localhost:8080/users/email?email=email@email.com
                 get("/email") {
                     val queryParameters = call.request.queryParameters
                     val email = queryParameters["email"]?.toLowerCase()
@@ -115,10 +116,10 @@ fun Application.userModule() {
                     }
                 }
 
-                // http://localhost:8080/users/status?statusId=10&classLetter=а
+                // http://localhost:8080/users/status?userId=440eea88-4eb2-11eb-b245-0242ac180002
                 get("/status") {
                     val queryParameters = call.request.queryParameters
-                    val statusId = queryParameters["statusId"]?.toInt()
+                    val statusId = queryParameters["userId"]?.toInt()
                     if (statusId == null) {
                         Log.info("Wrong parameters. Expected 'statusId' type of Int")
                         call.respond(HttpStatusCode.NotFound)
@@ -128,7 +129,7 @@ fun Application.userModule() {
                     }
                 }
 
-                // http://localhost:8080/users/role?userId=10&classLetter=а
+                // http://localhost:8080/users/role?userId=440eea88-4eb2-11eb-b245-0242ac180002
                 get("/role") {
                     val queryParameters = call.request.queryParameters
                     val userId = queryParameters["userId"]
