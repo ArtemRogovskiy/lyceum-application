@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `mgol`.`notification`
     `id`                   VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `created_by`           VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `title`                VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-    `message`              VARCHAR(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+    `message`              VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
     `approver`             VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
     `create_time`          TIMESTAMP                                                    NULL     DEFAULT CURRENT_TIMESTAMP,
     `is_approved`          TINYINT                                                      NOT NULL DEFAULT 0,

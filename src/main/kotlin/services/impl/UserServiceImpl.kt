@@ -10,8 +10,8 @@ import java.util.*
 
 class UserServiceImpl(private val userDao: UserDao) : UserService {
 
-    override suspend fun getUser(userId: UUID): UserDaoModel {
-        return userDao.getUser(userId)
+    override suspend fun getUserById(userId: UUID): UserDaoModel {
+        return userDao.getUserById(userId)
     }
 
     override suspend fun getUserByName(username: String): UserDaoModel {
@@ -22,8 +22,8 @@ class UserServiceImpl(private val userDao: UserDao) : UserService {
         return userDao.getUserByEmail(email)
     }
 
-    override suspend fun getUserStatus(userStatusId: Int): UserStatusDaoModel {
-        return userDao.getUserStatus(userStatusId)
+    override suspend fun getUserStatus(userId: UUID): UserStatusDaoModel {
+        return userDao.getUserStatus(userId)
     }
 
     override suspend fun getUserRole(userId: UUID): List<RoleDaoModel> {

@@ -8,7 +8,7 @@ import java.util.*
 
 interface UserDao {
 
-   suspend fun getUser(userId: UUID): UserDaoModel
+   suspend fun getUserById(userId: UUID): UserDaoModel
 
    suspend fun getUserByName(username: String): UserDaoModel
 
@@ -16,7 +16,7 @@ interface UserDao {
 
    suspend fun getUserByClass(classId: String): UserDaoModel
 
-   suspend fun getUserStatus(userStatusId: Int): UserStatusDaoModel
+   suspend fun getUserStatus(userId: UUID): UserStatusDaoModel
 
    suspend fun getUserRole(userId: UUID): List<RoleDaoModel>
 

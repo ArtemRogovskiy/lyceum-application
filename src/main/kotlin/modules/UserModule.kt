@@ -3,22 +3,15 @@ package modules
 import controllers.models.UserModel
 import org.koin.ktor.ext.inject
 
-import dao.UserDao
-import dao.models.UserDaoModel
-import dao.models.UserStatusDaoModel
-import dao.models.RoleDaoModel
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import services.UserService
-import services.SchoolClassService
 import util.Log
 import java.util.*
 import io.ktor.auth.*
-import io.ktor.features.*
-import io.ktor.http.content.*
 import io.ktor.sessions.*
 
 data class UserSession(val name: String, val roles: String) : Principal
@@ -26,33 +19,27 @@ data class OriginalRequestURI(val uri: String)
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.userModule() {
+
     val userService by inject<UserService>()
-
-    install(StatusPages) {
-        exception<Exception> {
-            call.response.status(HttpStatusCode.Forbidden)
-            call.respondRedirect("/errpage")
-        }
-    }
-
-    install(Sessions) {
-        cookie<UserSession>("ktor_session_cookie", SessionStorageMemory())
-        cookie<OriginalRequestURI>("original_request_cookie")
-    }
-
-    install(Authentication) {
-
-        session<UserSession> {
-            challenge {
-                call.sessions.set(OriginalRequestURI(call.request.uri))
-                call.respondRedirect("/login")
-            }
-            validate { session: UserSession ->
-                session
-            }
-        }
-
-    }
+//    install(StatusPages) {
+//        exception<Exception> {
+//            call.response.status(HttpStatusCode.Forbidden)
+//            call.respondRedirect("/errpage")
+//        }
+//    }
+//    install(Sessions) {
+//        cookie<UserSession>("ktor_session_cookie", SessionStorageMemory())
+//        cookie<OriginalRequestURI>("original_request_cookie")
+//    }
+//        session<UserSession> {
+//            challenge {
+//                call.sessions.set(OriginalRequestURI(call.request.uri))
+//                call.respondRedirect("/login")
+//            }
+//            validate { session: UserSession ->
+//                session
+//            }
+//        }
 
     routing() {
 
@@ -64,7 +51,7 @@ fun Application.userModule() {
                 val user = userService.getUserByName(username)
                 val role = userService.getUserRole(UUID.fromString(user.id))[0]
                 if (user.password == password) {
-                    call.sessions.set(UserSession(username, role.name))
+                    call.sessions.set(UserSession(username, role.role))
                     val redirectURL = call.sessions.get<OriginalRequestURI>()?.also {
                         call.sessions.clear<OriginalRequestURI>()
                     }
@@ -84,17 +71,17 @@ fun Application.userModule() {
 
         authenticate {
             route("/users") {
-                // http://0.0.0.0:8080/users/440eea88-4eb2-11eb-b245-0242ac180002
+                // http://0.0.0.0:8088/users/440eea88-4eb2-11eb-b245-0242ac180002
                 get("/{id}") {
 
                     val userId = call.parameters["id"]
                     userId ?: Log.info("Empty path parameter.")
                     val uID = UUID.fromString(userId)
-                    val response = userService.getUser(uID)
+                    val response = userService.getUserById(uID)
                     call.respond(response)
                 }
 
-                // http://localhost:8080/users/username?username=username
+                // http://localhost:8088/users/username?username=username
                 get("/username") {
                     val queryParameters = call.request.queryParameters
                     val username = queryParameters["username"]?.toLowerCase()
@@ -107,7 +94,7 @@ fun Application.userModule() {
                     }
                 }
 
-                // http://localhost:8080/users/email?email=email@email.com
+                // http://localhost:8088/users/email?email=email@email.com
                 get("/email") {
                     val queryParameters = call.request.queryParameters
                     val email = queryParameters["email"]?.toLowerCase()
@@ -120,20 +107,20 @@ fun Application.userModule() {
                     }
                 }
 
-                // http://localhost:8080/users/status?userId=440eea88-4eb2-11eb-b245-0242ac180002
+                // http://localhost:8088/users/status?userId=440eea88-4eb2-11eb-b245-0242ac180002
                 get("/status") {
                     val queryParameters = call.request.queryParameters
-                    val statusId = queryParameters["userId"]?.toInt()
-                    if (statusId == null) {
+                    val userId = queryParameters["userId"]
+                    if (userId == null) {
                         Log.info("Wrong parameters. Expected 'statusId' type of Int")
                         call.respond(HttpStatusCode.NotFound)
                     } else {
-                        val response = userService.getUserStatus(statusId)
+                        val response = userService.getUserStatus(UUID.fromString(userId))
                         call.respond(response)
                     }
                 }
 
-                // http://localhost:8080/users/role?userId=440eea88-4eb2-11eb-b245-0242ac180002
+                // http://localhost:8088/users/role?userId=440eea88-4eb2-11eb-b245-0242ac180002
                 get("/role") {
                     val queryParameters = call.request.queryParameters
                     val userId = queryParameters["userId"]

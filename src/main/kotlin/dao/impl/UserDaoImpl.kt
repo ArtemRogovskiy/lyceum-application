@@ -1,6 +1,5 @@
 package dao.impl
 
-import services.UserService
 import dao.UserDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,7 +14,7 @@ import java.util.*
 
 class UserDaoImpl : UserDao {
 
-    override suspend fun getUser(userId: UUID): UserDaoModel {
+    override suspend fun getUserById(userId: UUID): UserDaoModel {
         val query = """
             select id, username, password, email, last_name, first_name, middle_name, create_time, class_id, user_status_id
                 from mgol.user
@@ -61,10 +60,12 @@ class UserDaoImpl : UserDao {
         }
     }
 
-    override suspend fun getUserStatus(userId: Int): UserStatusDaoModel {
+    override suspend fun getUserStatus(userId: UUID): UserStatusDaoModel {
         val query = """
-           select us.name from mgol.user_status us join mgol.user u
-            on us.id = u.user_status_id where u.id = "$userId";
+           select us.name status, u.id user_id 
+           from mgol.user_status us join mgol.user u
+            on us.id = u.user_status_id 
+                where u.id = "$userId";
                 """.trimIndent()
         return withContext(Dispatchers.Default) {
             executeQuery(query, UserStatusDaoModel.userStatusFromResultSet)[0]
@@ -73,9 +74,11 @@ class UserDaoImpl : UserDao {
 
     override suspend fun getUserRole(userId: UUID): List<RoleDaoModel> {
         val query = """
-           select r.name from mgol.role r join mgol.user_role ur
-           on r.id = ur.role_id join mgol.user u
-            where ur.user_id = "$userId";
+           select r.name role, ur.user_id 
+           from mgol.role r 
+           join mgol.user_role ur
+            on r.id = ur.role_id join mgol.user u
+                where ur.user_id = "$userId";
                 """.trimIndent()
         return withContext(Dispatchers.Default) {
             executeQuery(query, RoleDaoModel.rolesFromResultSet)

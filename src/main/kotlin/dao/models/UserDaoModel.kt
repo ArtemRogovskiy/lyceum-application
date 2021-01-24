@@ -2,22 +2,36 @@ package dao.models
 
 import java.sql.ResultSet
 
-class UserDaoModel(resultSet: ResultSet) {
-    val id: String = resultSet.getString("id")
-    val userName: String = resultSet.getString("username")
-    val email: String = resultSet.getString("email")
-    val password: String = resultSet.getString("password")
-    val firstName: String = resultSet.getString("last_name")
-    val middleName: String = resultSet.getString("middle_name")
-    val lastName: String = resultSet.getString("last_name")
-    val classId: String = resultSet.getString("class_id")
-    val statusId: Int = resultSet.getInt("user_status_id")
-
+class UserDaoModel(
+    val id: String,
+    val userName: String,
+    val email: String,
+    val password: String,
+    val lastName: String,
+    val firstName: String,
+    val middleName: String,
+    val createTime: String,
+    val classId: String?,
+    val statusId: Int
+) {
     companion object {
         val userFromResultSet: (ResultSet) -> List<UserDaoModel> = {
             val list = mutableListOf<UserDaoModel>()
             while (it.next()) {
-                list.add(UserDaoModel(it))
+                list.add(
+                    UserDaoModel(
+                        it.getString("id"),
+                        it.getString("username"),
+                        it.getString("email"),
+                        it.getString("password"),
+                        it.getString("last_name"),
+                        it.getString("first_name"),
+                        it.getString("middle_name"),
+                        it.getString("create_time"),
+                        it.getString("class_id"),
+                        it.getInt("user_status_id")
+                    )
+                )
             }
             list
         }

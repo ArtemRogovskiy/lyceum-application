@@ -2,6 +2,7 @@ package modules
 
 import controllers.models.ClassSchedule
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.gson.*
 import io.ktor.http.*
@@ -10,12 +11,15 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 import services.ScheduleService
+import services.UserService
 import util.Log
 import java.text.DateFormat
 import java.util.*
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.scheduleModule() {
+    val userService by inject<UserService>()
+
     install(CORS) {
         method(HttpMethod.Get)
         method(HttpMethod.Post)
@@ -30,6 +34,17 @@ fun Application.scheduleModule() {
         gson {
             setDateFormat(DateFormat.LONG)
             setPrettyPrinting()
+        }
+    }
+    install(Authentication) {
+        basic {
+            realm = "lyceum-application"
+            validate { credentials ->
+                val user = userService.getUserByName(credentials.name)
+                if (credentials.password == user.password) {
+                    UserIdPrincipal(credentials.name)
+                } else null
+            }
         }
     }
 
