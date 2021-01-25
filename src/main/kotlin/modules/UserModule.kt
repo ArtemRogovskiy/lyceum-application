@@ -1,66 +1,49 @@
 package modules
 
+import controllers.models.UserCredentialsModel
 import controllers.models.UserModel
-import org.koin.ktor.ext.inject
-
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
+import org.koin.ktor.ext.inject
 import services.UserService
 import util.Log
+import util.checkPassword
+import util.hashPassword
 import java.util.*
-import io.ktor.auth.*
-import io.ktor.sessions.*
 
 data class UserSession(val name: String, val roles: String) : Principal
-data class OriginalRequestURI(val uri: String)
 
-@Suppress("unused") // Referenced in application.conf
+@Suppress("unused")
 fun Application.userModule() {
 
     val userService by inject<UserService>()
+
 //    install(StatusPages) {
 //        exception<Exception> {
 //            call.response.status(HttpStatusCode.Forbidden)
 //            call.respondRedirect("/errpage")
 //        }
 //    }
-//    install(Sessions) {
-//        cookie<UserSession>("ktor_session_cookie", SessionStorageMemory())
-//        cookie<OriginalRequestURI>("original_request_cookie")
-//    }
-//        session<UserSession> {
-//            challenge {
-//                call.sessions.set(OriginalRequestURI(call.request.uri))
-//                call.respondRedirect("/login")
-//            }
-//            validate { session: UserSession ->
-//                session
-//            }
-//        }
 
     routing() {
 
         post("/login") {
-            val queryParameters = call.request.queryParameters
-            val username = queryParameters["username"]
-            val password = queryParameters["password"]
-            if (username != null && password != null) {
-                val user = userService.getUserByName(username)
-                val role = userService.getUserRole(UUID.fromString(user.id))[0]
-                if (user.password == password) {
-                    call.sessions.set(UserSession(username, role.role))
-                    val redirectURL = call.sessions.get<OriginalRequestURI>()?.also {
-                        call.sessions.clear<OriginalRequestURI>()
-                    }
-                    call.respondRedirect(redirectURL?.uri ?: "/")
-                } else {
-                    call.respondRedirect("/users/login")
-                }
+            val credentials = call.receive<UserCredentialsModel>()
+            val username = credentials.username
+            val password = credentials.password
+//            println(hashPassword(password))
+            val user = userService.getUserByName(username)
+            val role = userService.getUserRole(UUID.fromString(user.id))[0]
+            if (checkPassword(password, storedHash = user.password)) {
+                call.sessions.set(UserSession(username, role.role))
+                call.respond(HttpStatusCode.OK)
             } else {
-                call.respondRedirect("/users/login")
+                call.respond(HttpStatusCode.Unauthorized)
             }
         }
 
@@ -135,6 +118,7 @@ fun Application.userModule() {
 
                 post("/{roleId}") {
                     val user = call.receive<UserModel>()
+                    user.password = hashPassword(user.password)
                     val queryParameters = call.request.queryParameters
                     val roleId = queryParameters["roleId"]?.toInt()
                     if (roleId == null) {

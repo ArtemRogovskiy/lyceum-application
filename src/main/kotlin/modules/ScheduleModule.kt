@@ -9,6 +9,7 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
 import org.koin.ktor.ext.inject
 import services.ScheduleService
 import services.UserService
@@ -34,6 +35,11 @@ fun Application.scheduleModule() {
         gson {
             setDateFormat(DateFormat.LONG)
             setPrettyPrinting()
+        }
+    }
+    install(Sessions) {
+        cookie<UserSession>("session_cookie", storage = SessionStorageMemory()) {
+            cookie.maxAgeInSeconds = 1000
         }
     }
     install(Authentication) {
