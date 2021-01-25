@@ -17,13 +17,13 @@ fun Application.schoolClassModule() {
 
     routing {
         route("/classes") {
-            // http://localhost:8080/classes
+            // http://localhost:8088/classes
             get() {
                 val response = schoolClassService.getAllSchoolClasses()
                 call.respond(response)
             }
 
-            // http://localhost:8080/classes/660eeba7-27e8-11eb-aa2f-0242ac140002
+            // http://localhost:8088/classes/660eeba7-27e8-11eb-aa2f-0242ac140002
             get("/{classId}") {
                 val classId = call.parameters["classId"]
                 classId ?: Log.warn("Empty path parameter: classId")

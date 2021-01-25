@@ -36,6 +36,7 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
     implementation("io.ktor:ktor-auth:$ktor_version")
+    implementation "io.ktor:ktor-server-sessions:$ktor_version"
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
     testImplementation "io.mockk:mockk:$mockk_version"
@@ -44,4 +45,5 @@ dependencies {
     compile "io.ktor:ktor-gson:$ktor_version"
     compile group: "mysql", name: "mysql-connector-java", version: "$mysql_version"
     compile "org.koin:koin-ktor:$koin_version"
+    compile group: "org.mindrot", name: "jbcrypt", version: "$jbcrypt_version"
 }

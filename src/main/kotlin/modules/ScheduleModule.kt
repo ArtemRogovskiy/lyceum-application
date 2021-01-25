@@ -9,6 +9,7 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
 import org.koin.ktor.ext.inject
 import services.ScheduleService
 import services.UserService
@@ -36,6 +37,11 @@ fun Application.scheduleModule() {
             setPrettyPrinting()
         }
     }
+    install(Sessions) {
+        cookie<UserSession>("session_cookie", storage = SessionStorageMemory()) {
+            cookie.maxAgeInSeconds = 1000
+        }
+    }
     install(Authentication) {
         basic {
             realm = "lyceum-application"
@@ -52,14 +58,14 @@ fun Application.scheduleModule() {
 
     routing {
         route("/schedules") {
-            // http://localhost:8080/schedules/7b89ea87-27e8-11eb-aa2f-0242ac140002
+            // http://localhost:8088/schedules/7b89ea87-27e8-11eb-aa2f-0242ac140002
             get("/{scheduleId}") {
                 val scheduleId = call.parameters["scheduleId"]
                 scheduleId ?: Log.warn("Empty path parameter.")
                 call.respond(scheduleService.getSchedule(UUID.fromString(scheduleId)))
             }
 
-            // http://localhost:8080/schedules/class?classNumber=10&classLetter=а
+            // http://localhost:8088/schedules/class?classNumber=10&classLetter=а
             get("/class") {
                 val queryParameters = call.request.queryParameters
                 val classNumberParam = queryParameters["classNumber"]?.toInt()
@@ -73,7 +79,7 @@ fun Application.scheduleModule() {
                 }
             }
 
-            // http://localhost:8080/schedules/teacher?teacherId=6e5cd906-27e8-11eb-aa2f-0242ac140002
+            // http://localhost:8088/schedules/teacher?teacherId=6e5cd906-27e8-11eb-aa2f-0242ac140002
             get("/teacher") {
                 val queryParameters = call.request.queryParameters
                 val teacherIdParam = queryParameters["teacherId"]
