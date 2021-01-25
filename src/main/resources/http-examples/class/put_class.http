@@ -1,0 +1,7 @@
+PUT http://127.0.0.1:8080/classes/3afeda79-5f01-4868-a3a1-48d4f0f15025
+Content-Type: application/json
+
+{
+  "number": 11,
+  "letter": "З"
+}
