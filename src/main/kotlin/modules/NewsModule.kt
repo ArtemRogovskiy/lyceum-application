@@ -17,12 +17,12 @@ fun Application.newsModule() {
 
     routing {
         route("/news") {
-            // http://localhost:8080/news
+            // http://localhost:8088/news
             get() {
                 call.respond(newsService.getAllNews())
             }
 
-            // http://localhost:8080/news/6e5cd906-27e8-11eb-aa2f-0242ac140002
+            // http://localhost:8088/news/6e5cd906-27e8-11eb-aa2f-0242ac140002
             get("/{newsId}") {
                 val newsId = call.parameters["newsId"]
                 newsId ?: Log.warn("Empty path parameter: newsId")
